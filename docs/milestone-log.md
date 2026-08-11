@@ -81,4 +81,6 @@ Milestone 1 closed following successful developer manual QA.
 
 ### Commit
 
-Pending developer review.
+- **Hash:** `91428befa3462e3eaf6b0c0adc2b7b12abe2c2a6`
+- **Message:** `milestone 1: initialise Shadow IT Tracker architecture`
+- **Status:** Pushed to `main`.

@@ -34,4 +34,5 @@ runtime behavior, graceful offline handling, Git hygiene check, and QA result.
 tests, configuration, Milestone 2 work, commits, and pushes.
 
 **Outcome:** Manual QA recorded as passed and Milestone 1 documentation closed.
-The commit remains pending developer review; no commit hash was invented.
+The confirmed Milestone 1 implementation commit was recorded after it was
+pushed to `main`.
