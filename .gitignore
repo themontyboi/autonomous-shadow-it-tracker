@@ -1,0 +1,29 @@
+# Local environment files (keep examples tracked)
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Node.js / Next.js
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
