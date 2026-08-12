@@ -136,7 +136,19 @@ changed.
 
 ### Manual QA
 
-**PENDING — developer verification required.**
+**PASSED — developer verified:**
+
+- All desktop product routes were reviewed successfully.
+- The mobile width defect was fixed and re-verified with full-width content,
+  normal mobile gutters, and no document-level horizontal overflow.
+- The mobile navigation drawer opens and closes correctly, including its
+  backdrop, navigation links, and secondary Settings/Billing access.
+- The real local API health indicator continues to handle both **Connected** and
+  **Unavailable** states without making the product shell unusable.
+- The demo scan progression was verified as local-only presentation state and
+  performs no network activity.
+- Findings search/filter controls and local-only settings behavior were
+  verified.
 
 ### Problems/fixes
 
@@ -150,13 +162,16 @@ viewport. Computed-layout inspection traced this to the recent-activity grid's
 automatic minimum track sizing: the 720px table minimum widened its grid item
 instead of remaining inside the table scroller. Explicit zero-minimum grid
 tracks now contain the table at mobile widths while preserving the desktop
-1.2:0.8 column ratio. Corrected mobile QA remains pending developer verification.
+1.2:0.8 column ratio. Corrected mobile QA subsequently passed developer
+verification.
 
 ### Documentation status
 
 Milestone 2 README, architecture, prompt, learning, and milestone records
-updated. Manual QA remains pending.
+updated. Milestone 2 closed following successful developer manual QA.
 
 ### Commit
 
-PENDING developer review.
+- **Hash:** `5a4720e1543e69623a624acd4a525a31571a919b`
+- **Message:** `milestone 2: build cybersecurity SaaS dashboard`
+- **Status:** Pushed to `main`.

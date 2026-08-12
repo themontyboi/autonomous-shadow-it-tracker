@@ -55,7 +55,7 @@ finding persistence, secret searching, AI/LLM/LangGraph, remediation, external
 API/OAuth/webhook integrations, scheduling, Stripe, checkout, subscription
 enforcement, and production deployment.
 
-**Outcome:** Milestone 2 product-shell implementation prepared for automated
+**Outcome:** Milestone 2 product-shell implementation passed automated
 validation and developer manual QA. No real scanning or future backend system
 was created.
 
@@ -66,7 +66,7 @@ developer QA without changing product behavior or desktop layout.
 
 **Included:** Inspect computed layout sizing, contain the wide findings table
 inside its existing horizontal scroller, rerun regressions, and record the QA
-fix while leaving manual verification pending.
+fix and subsequent developer re-verification.
 
 **Explicitly excluded:** Mock data, routes, filters, scan behavior, settings,
 charts/data, backend code, API health behavior, dependencies, and all future
@@ -74,5 +74,5 @@ milestone systems.
 
 **Outcome:** Replaced the dashboard activity grid's automatic minimum track with
 explicit `minmax(0, …)` tracks so mobile content can use the viewport width
-without document-level horizontal overflow. Developer mobile re-verification is
-pending.
+without document-level horizontal overflow. Developer mobile re-verification
+passed.
