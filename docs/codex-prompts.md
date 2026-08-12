@@ -36,3 +36,43 @@ tests, configuration, Milestone 2 work, commits, and pushes.
 **Outcome:** Manual QA recorded as passed and Milestone 1 documentation closed.
 The confirmed Milestone 1 implementation commit was recorded after it was
 pushed to `main`.
+
+## Milestone 2 — Cybersecurity SaaS Dashboard UI
+
+**Objective:** Replace the temporary status page with a polished responsive
+security-product shell built from typed synthetic data.
+
+**Included:** Eight product routes, shared responsive navigation, dashboard
+metrics and lightweight charts, reusable severity/status/table components,
+centralized typed fixtures, client-side findings filters, local settings, an
+explicitly simulated New Scan interaction, and the preserved real API health
+indicator.
+
+**Explicitly excluded:** Supabase/PostgreSQL, authentication and accounts,
+organisations and membership, real domain registration or verification, scan
+APIs/workers/queues, network discovery or probing, vulnerability detection,
+finding persistence, secret searching, AI/LLM/LangGraph, remediation, external
+API/OAuth/webhook integrations, scheduling, Stripe, checkout, subscription
+enforcement, and production deployment.
+
+**Outcome:** Milestone 2 product-shell implementation prepared for automated
+validation and developer manual QA. No real scanning or future backend system
+was created.
+
+## Milestone 2 — Responsive Layout Correction
+
+**Objective:** Correct the mobile dashboard width defect identified during
+developer QA without changing product behavior or desktop layout.
+
+**Included:** Inspect computed layout sizing, contain the wide findings table
+inside its existing horizontal scroller, rerun regressions, and record the QA
+fix while leaving manual verification pending.
+
+**Explicitly excluded:** Mock data, routes, filters, scan behavior, settings,
+charts/data, backend code, API health behavior, dependencies, and all future
+milestone systems.
+
+**Outcome:** Replaced the dashboard activity grid's automatic minimum track with
+explicit `minmax(0, …)` tracks so mobile content can use the viewport width
+without document-level horizontal overflow. Developer mobile re-verification is
+pending.

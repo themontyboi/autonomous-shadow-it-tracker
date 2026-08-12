@@ -1,21 +1,24 @@
 # Autonomous Shadow IT Tracker
 
 Autonomous Shadow IT Tracker is a defensive External Attack Surface Management
-(EASM) and exposure-monitoring project. Milestone 1 establishes a local
-full-stack foundation and proves that a browser-hosted Next.js frontend can
-communicate with a FastAPI backend.
+(EASM) and exposure-monitoring project. Milestone 2 adds a responsive
+cybersecurity SaaS product shell powered entirely by typed synthetic data while
+preserving the Milestone 1 FastAPI health connection.
 
 This repository does **not** yet scan domains, store data, authenticate users,
 or use AI. Those capabilities belong to later, separately authorised
 milestones.
 
-## Milestone 1 status
+## Current Milestone 2 status
 
 Implemented:
 
-- Next.js App Router frontend with TypeScript, Tailwind CSS, and ESLint
-- frontend status page with checking, connected, and unavailable API states
-- reusable browser API helper configured by environment variable
+- shared Next.js App Router product layout with eight application routes
+- responsive desktop sidebar and accessible mobile navigation drawer
+- typed synthetic assets, scans, findings, reports, and integration fixtures
+- dashboard metrics, lightweight charts, tables, filters, and demo-only controls
+- mocked New Scan interaction that performs no network activity
+- compact checking, connected, and unavailable API health states
 - FastAPI backend with a non-sensitive `GET /health` endpoint
 - explicit, configurable local CORS origins
 - backend health test plus Ruff lint/format configuration
@@ -23,13 +26,13 @@ Implemented:
 
 ## Current architecture and stack
 
-The browser loads the Next.js frontend on port 3000. A small client component
-calls the FastAPI `GET /health` endpoint on port 8000. FastAPI permits only the
-configured frontend origins at the browser CORS boundary.
+The browser loads the Next.js product shell on port 3000. Product routes render
+centralized mock fixtures; they do not request future security data. A compact
+client component independently calls FastAPI `GET /health` on port 8000.
 
 | Component | Technology | Current responsibility |
 | --- | --- | --- |
-| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4 | Present local readiness and report backend health |
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4, Lucide React | Present the responsive mock-data product shell and report backend health |
 | Backend | Python 3.12+, FastAPI, Uvicorn | Serve the health endpoint and local CORS policy |
 | Validation | ESLint, TypeScript, pytest, Ruff | Check the Milestone 1 codebase |
 
@@ -41,9 +44,10 @@ boundaries.
 ```text
 autonomous-shadow-it-tracker/
 |-- frontend/               # Next.js browser application
-|   |-- src/app/            # App Router page and global styles
-|   |-- src/components/     # Small interactive UI components
-|   `-- src/lib/            # Reusable API helper
+|   |-- src/app/(product)/  # Shared product layout and application routes
+|   |-- src/components/     # Shell, tables, badges, charts, demo interactions
+|   |-- src/lib/            # API helper, mock fixtures, formatting
+|   `-- src/types/          # Frontend security-domain types
 |-- backend/
 |   |-- app/api/health.py   # GET /health route
 |   |-- app/main.py         # FastAPI app and CORS configuration
@@ -113,9 +117,10 @@ npm run dev
 ```
 
 On macOS/Linux, use `cp .env.example .env.local`. Visit
-<http://localhost:3000>. With both development servers running, the backend
-status should move from **Checking** to **Connected**. If FastAPI is stopped or
-misconfigured, the UI displays **Unavailable** and remains usable.
+<http://localhost:3000>, which redirects to `/dashboard`. With both development
+servers running, the sidebar API status should move from **Checking** to
+**Connected**. If FastAPI is stopped or misconfigured, it displays
+**Unavailable** and the mock-data product UI remains usable.
 
 `NEXT_PUBLIC_API_BASE_URL` is compiled into browser-delivered JavaScript. It is
 appropriate for a public API location only—never place secrets, credentials, or
@@ -152,8 +157,9 @@ evidence, while AI may later interpret that evidence—it will not replace
 deterministic detection. Complete secrets must never be exposed in interfaces or
 logs, and any future generated remediation remains subject to human review.
 
-Milestone 1 intentionally contains no Supabase/PostgreSQL integration,
+Milestone 2 intentionally contains no Supabase/PostgreSQL integration,
 authentication, organisations, domain registration or verification, scanner or
-worker logic, asset discovery, findings, AI/LLM integration, alerts, billing, or
-demo scan functionality.
-
+worker logic, real asset discovery, vulnerability detection or finding
+persistence, AI/LLM integration, alerts, billing integration, or real scan
+functionality. All security and usage information shown in the frontend is
+synthetic demo data.

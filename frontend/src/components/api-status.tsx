@@ -1,5 +1,6 @@
 "use client";
 
+import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { getHealth } from "@/lib/api";
@@ -17,9 +18,7 @@ async function resolveApiState(signal?: AbortSignal): Promise<ApiState | null> {
     await getHealth(signal);
     return "connected";
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
-      return null;
-    }
+    if (error instanceof DOMException && error.name === "AbortError") return null;
     return "unavailable";
   }
 }
@@ -30,43 +29,29 @@ export function ApiStatus() {
   useEffect(() => {
     const controller = new AbortController();
     void resolveApiState(controller.signal).then((nextState) => {
-      if (nextState !== null) {
-        setState(nextState);
-      }
+      if (nextState !== null) setState(nextState);
     });
     return () => controller.abort();
   }, []);
 
+  function retry() {
+    setState("checking");
+    void resolveApiState().then((nextState) => {
+      if (nextState !== null) setState(nextState);
+    });
+  }
+
   return (
-    <div className="flex items-center justify-between gap-6 border-t border-slate-200 py-5">
-      <div>
-        <p className="font-medium text-slate-950">Backend API</p>
-        <p className="mt-1 text-sm text-slate-500">FastAPI health endpoint</p>
-      </div>
-      <div className="flex items-center gap-3">
-        <span
-          aria-hidden="true"
-          className={`h-2.5 w-2.5 rounded-full status-${state}`}
-        />
-        <span aria-live="polite" className="text-sm font-semibold text-slate-700">
-          {statusCopy[state]}
-        </span>
-        {state === "unavailable" ? (
-          <button
-            className="rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
-            onClick={() => {
-              setState("checking");
-              void resolveApiState().then((nextState) => {
-                if (nextState !== null) {
-                  setState(nextState);
-                }
-              });
-            }}
-            type="button"
-          >
-            Retry
-          </button>
-        ) : null}
+    <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">Local API</p>
+          <div className="mt-1.5 flex items-center gap-2">
+            <span aria-hidden="true" className={`h-2 w-2 rounded-full status-${state}`} />
+            <span aria-live="polite" className="text-xs font-medium text-slate-300">{statusCopy[state]}</span>
+          </div>
+        </div>
+        {state === "unavailable" ? <button type="button" onClick={retry} className="rounded-md p-2 text-slate-400 transition hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400" aria-label="Retry local API health check"><RefreshCw aria-hidden="true" size={14} /></button> : null}
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Autonomous Shadow IT Tracker",
-  description: "Defensive external attack surface monitoring foundation.",
+  description: "Defensive external attack surface monitoring product demo.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

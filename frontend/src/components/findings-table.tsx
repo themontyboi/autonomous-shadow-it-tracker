@@ -1,0 +1,19 @@
+"use client";
+
+import { Search } from "lucide-react";
+import { useMemo, useState } from "react";
+
+import { SeverityBadge, StatusBadge } from "@/components/badges";
+import { DataTable, TableCell, TableHead } from "@/components/data-table";
+import { formatDateTime } from "@/lib/format";
+import { findings } from "@/lib/mock-data";
+import type { FindingStatus, Severity } from "@/types/security";
+
+export function FindingsTable() {
+  const [query, setQuery] = useState("");
+  const [severity, setSeverity] = useState<Severity | "all">("all");
+  const [status, setStatus] = useState<FindingStatus | "all">("all");
+  const filtered = useMemo(() => findings.filter((finding) => { const matchesQuery = `${finding.title} ${finding.asset} ${finding.category}`.toLowerCase().includes(query.toLowerCase()); return matchesQuery && (severity === "all" || finding.severity === severity) && (status === "all" || finding.status === status); }), [query, severity, status]);
+  return <div className="space-y-4"><div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-[minmax(0,1fr)_180px_180px]"><label className="relative"><span className="sr-only">Search findings</span><Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, asset, or category" className="w-full rounded-lg border border-slate-300 py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-100"/></label><label><span className="sr-only">Filter by severity</span><select value={severity} onChange={(event) => setSeverity(event.target.value as Severity | "all")} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-100"><option value="all">All severities</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="info">Info</option></select></label><label><span className="sr-only">Filter by status</span><select value={status} onChange={(event) => setStatus(event.target.value as FindingStatus | "all")} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-100"><option value="all">All statuses</option><option value="open">Open</option><option value="triaged">Triaged</option><option value="resolved">Resolved</option></select></label></div><p className="text-xs text-slate-500" aria-live="polite">Showing {filtered.length} of {findings.length} demo findings</p>{filtered.length ? <DataTable label="Filtered demo findings"><thead><tr><TableHead>Severity</TableHead><TableHead>Finding</TableHead><TableHead>Asset</TableHead><TableHead>Category</TableHead><TableHead>Status</TableHead><TableHead>Last seen</TableHead></tr></thead><tbody>{filtered.map((finding) => <tr key={finding.id} className="hover:bg-slate-50"><TableCell><SeverityBadge severity={finding.severity}/></TableCell><TableCell><p className="font-medium text-slate-900">{finding.title}</p><span className="mt-1 block font-mono text-[11px] text-slate-400">{finding.id}</span></TableCell><TableCell><code className="text-xs">{finding.asset}</code></TableCell><TableCell>{finding.category}</TableCell><TableCell><StatusBadge status={finding.status}/></TableCell><TableCell>{formatDateTime(finding.lastSeen)}</TableCell></tr>)}</tbody></DataTable> : <div className="rounded-xl border border-dashed border-slate-300 bg-white p-12 text-center"><p className="font-medium text-slate-800">No demo findings match these filters.</p><p className="mt-2 text-sm text-slate-500">Adjust the search or filter selection.</p></div>}</div>;
+}
+

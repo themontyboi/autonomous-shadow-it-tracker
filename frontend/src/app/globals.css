@@ -17,6 +17,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+button,
+a,
+input,
+select {
+  outline-color: #0d9488;
+}
+
+::selection {
+  background: #ccfbf1;
+  color: #0f172a;
+}
+
 .status-checking {
   background: #f59e0b;
   animation: pulse 1.5s ease-in-out infinite;

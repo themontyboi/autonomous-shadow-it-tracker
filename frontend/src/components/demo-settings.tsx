@@ -1,0 +1,14 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { useState } from "react";
+
+export function DemoSettings() {
+  const [compactTables, setCompactTables] = useState(true);
+  const [scanNotices, setScanNotices] = useState(false);
+  const [theme, setTheme] = useState("system");
+  return <div className="space-y-5"><section className="rounded-xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 p-5"><h2 className="font-semibold text-slate-950">Display preferences</h2><p className="mt-1 text-sm text-slate-500">Temporary settings for this browser session.</p></div><SettingRow title="Compact technical tables" description="Reduce spacing in data-dense inventory views"><Switch checked={compactTables} onChange={setCompactTables} label="Compact technical tables"/></SettingRow><div className="border-t border-slate-100"><SettingRow title="Scan completion notices" description="Demonstrate in-app notification preference only"><Switch checked={scanNotices} onChange={setScanNotices} label="Scan completion notices"/></SettingRow></div></section><section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"><label htmlFor="appearance" className="font-semibold text-slate-950">Appearance</label><p className="mt-1 text-sm text-slate-500">Theme selection is not yet applied or persisted.</p><select id="appearance" value={theme} onChange={(event) => setTheme(event.target.value)} className="mt-4 w-full max-w-xs rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-100"><option value="system">System default</option><option value="light">Light</option><option value="dark">Dark (preview only)</option></select></section><p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">These controls use local component state only. Changes are not saved and reset on reload.</p></div>;
+}
+
+function SettingRow({ title, description, children }: { title: string; description: string; children: ReactNode }) { return <div className="flex items-center justify-between gap-6 p-5"><div><p className="text-sm font-medium text-slate-800">{title}</p><p className="mt-1 text-xs leading-5 text-slate-500">{description}</p></div>{children}</div>; }
+function Switch({ checked, onChange, label }: { checked: boolean; onChange: (value: boolean) => void; label: string }) { return <button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-6 w-11 shrink-0 rounded-full transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 ${checked ? "bg-teal-600" : "bg-slate-300"}`}><span className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition ${checked ? "left-6" : "left-1"}`}/></button>; }

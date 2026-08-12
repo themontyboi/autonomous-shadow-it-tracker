@@ -84,3 +84,79 @@ Milestone 1 closed following successful developer manual QA.
 - **Hash:** `91428befa3462e3eaf6b0c0adc2b7b12abe2c2a6`
 - **Message:** `milestone 1: initialise Shadow IT Tracker architecture`
 - **Status:** Pushed to `main`.
+
+## Milestone 2 — Cybersecurity SaaS Dashboard UI
+
+**Date:** 2026-08-12
+
+### Objective
+
+Build the cybersecurity SaaS product shell with typed mock data.
+
+### Scope
+
+Responsive shared application navigation; Dashboard, Assets, Scans, Findings,
+Reports, Integrations, Settings, and Billing routes; reusable UI primitives;
+lightweight charts; presentation filters; local-only controls; and a mocked New
+Scan flow. Existing FastAPI health communication was preserved.
+
+### Technical decisions
+
+- Use a `(product)` route group with a shared Next.js layout.
+- Centralize small security-domain types in `src/types/security.ts` and all
+  fixtures in `src/lib/mock-data.ts`.
+- Keep pages server-rendered by default and isolate interactive client
+  components.
+- Use reusable severity/status badges, table primitives, metric cards, and
+  lightweight CSS/SVG charts.
+- Use a persistent desktop sidebar and accessible mobile drawer.
+- Simulate scan progression entirely in local state with explicit safety copy.
+- Keep the existing API helper and genuine FastAPI health request in a compact
+  shell indicator.
+- Add only `lucide-react`; no UI kit, charting, state, form, or API framework.
+
+### Files/systems changed
+
+Replaced the temporary root experience with a dashboard redirect and shared
+product layout; added eight frontend routes, typed security models, centralized
+mock fixtures, formatting utility, reusable shell/UI/chart/table components,
+and local-only scan/filter/settings interactions. Updated current architecture,
+README, prompt, learning, and milestone documentation. Backend code was not
+changed.
+
+### Automated validation performed
+
+- `npm run lint`: passed with no findings.
+- `npm run typecheck`: passed with no TypeScript errors.
+- `npm run build`: passed with all eight product routes and the root route
+  generated as static content.
+- `python -m pytest`: passed, 1 test collected and passed in 0.68 seconds.
+- `python -m ruff check .`: passed with all checks clean.
+- `python -m ruff format --check .`: passed, 5 files already formatted.
+
+### Manual QA
+
+**PENDING — developer verification required.**
+
+### Problems/fixes
+
+An early typecheck showed that the installed Lucide package does not include
+brand icons, so a neutral `GitBranch` icon was used for the GitHub demo card.
+React lint rules rejected mutable chart-stop accumulation during render; the
+calculation was made pure. The route-group layout uses a standard typed children
+prop because generated route-aware `LayoutProps` does not represent the group.
+Developer mobile QA then found the dashboard document widened beyond the
+viewport. Computed-layout inspection traced this to the recent-activity grid's
+automatic minimum track sizing: the 720px table minimum widened its grid item
+instead of remaining inside the table scroller. Explicit zero-minimum grid
+tracks now contain the table at mobile widths while preserving the desktop
+1.2:0.8 column ratio. Corrected mobile QA remains pending developer verification.
+
+### Documentation status
+
+Milestone 2 README, architecture, prompt, learning, and milestone records
+updated. Manual QA remains pending.
+
+### Commit
+
+PENDING developer review.
