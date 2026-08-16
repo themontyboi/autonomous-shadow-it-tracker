@@ -286,8 +286,16 @@ cache, without affecting test execution.
 
 Milestone 3 README, architecture, database schema, prompt, learning, and
 milestone records updated. Milestone 3 documentation closed following
-successful developer manual QA; the implementation commit remains pending.
+successful developer manual QA. Both implementation commits were pushed to
+`main`; Milestone 3 is fully closed.
 
 ### Commit
 
-**PENDING developer review.**
+1. Backend and service foundation:
+   - **Hash:** `360ea6e881292e4b944c351d20dad6eb62e9fb83`
+   - **Message:** `milestone 3: add Supabase data foundation`
+   - **Status:** Pushed to `main`.
+2. Schema and documentation:
+   - **Hash:** `0174360138ab784d674e494ccc74f768ed4a5d07`
+   - **Message:** `milestone 3: add Supabase schema and documentation`
+   - **Status:** Pushed to `main`.

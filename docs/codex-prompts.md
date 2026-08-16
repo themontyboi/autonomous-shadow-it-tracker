@@ -102,8 +102,9 @@ of frontend mock data.
 
 **Outcome:** The local schema and safe seed rebuilt successfully, backend unit
 and live Data API service validation passed, RLS remained deny-by-default for
-browser roles, and frontend/backend regressions passed. Developer manual QA and
-the implementation commit remain pending; Milestone 4 was not started.
+browser roles, and frontend/backend regressions passed. Developer manual QA
+subsequently passed, and both implementation commits were pushed to `main`;
+Milestone 4 was not started.
 
 ## Milestone 3 — Documentation Closure
 
@@ -120,4 +121,4 @@ dependencies, configuration, frontend UI, backend services, database
 architecture, commits, pushes, and Milestone 4 work.
 
 **Outcome:** Milestone 3 manual QA and documentation were recorded as complete.
-The implementation commit remains pending; no hash was invented.
+Both confirmed implementation commits were subsequently pushed to `main`.
