@@ -9,6 +9,7 @@ description = "FastAPI foundation for the Autonomous Shadow IT Tracker"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.116,<1.0",
+    "supabase>=2.31,<3.0",
     "uvicorn>=0.35,<1.0",
 ]
 
@@ -24,6 +25,9 @@ packages = ["app"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "integration: requires an explicitly configured local Supabase stack",
+]
 
 [tool.ruff]
 target-version = "py312"
