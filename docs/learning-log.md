@@ -52,3 +52,42 @@ that a developer has reviewed or mastered them.
   progression remain ephemeral and require no persistence service.
 - **Safe scan simulation:** The New Scan flow illustrates product states only;
   it performs no DNS, HTTP, TLS, API, or other reconnaissance activity.
+
+## Milestone 3 — Relational data foundation
+
+- **Relational modelling:** Separate tables describe entities once and connect
+  them through explicit relationships rather than duplicating nested data.
+- **Primary and foreign keys:** UUID primary keys identify records; foreign keys
+  enforce that referenced parents exist and define safe deletion behavior.
+- **Many-to-many relationships:** `organization_members` connects users and
+  organizations with a composite key that prevents duplicate membership.
+- **UUIDs:** Database-generated UUIDs avoid tenant-local integer assumptions and
+  work well across future distributed application boundaries.
+- **Migrations and reproducibility:** A versioned SQL migration is the source of
+  schema history; a clean `db reset` proves a developer can reconstruct it.
+- **Seed data:** Deterministic, reserved `.invalid` fixtures make relationships
+  inspectable without introducing real organizations, targets, or secrets.
+- **Constraints:** Checks, uniqueness rules, time ordering, JSON-object checks,
+  and tenant-aware foreign keys reject invalid states close to the data.
+- **Indexes:** Targeted tenant and relationship indexes support expected access
+  paths without prematurely optimizing unknown workloads.
+- **Multi-tenancy:** Tenant-owned rows carry `organization_id`; composite foreign
+  keys prevent references across organizations.
+- **Scoped queries:** The service requires an organization identifier and adds
+  an explicit equality filter rather than offering unrestricted domain reads.
+- **RLS:** Row Level Security is enabled before browser access exists, with no
+  broad anonymous policies. In the absence of policies, browser roles remain
+  denied.
+- **RLS versus authorization:** RLS is database defense-in-depth; future FastAPI
+  routes must still authenticate users and authorize organization membership.
+- **Backend-only keys:** Secret/service-role credentials bypass normal RLS and
+  therefore belong only in backend process configuration—not frontend bundles,
+  logs, exceptions, or Git.
+- **Supabase Data API:** The official Python client accesses PostgreSQL through
+  PostgREST while Pydantic validates the returned application records.
+- **Service layer:** A narrow data-access boundary centralizes configuration,
+  response validation, safe errors, and tenant-scoping conventions.
+- **Frontend mock boundary:** Keeping the dashboard on typed fixtures avoids
+  implying authentication or authorization that Milestone 3 does not provide.
+- **Schema-first foundation:** Reproducible persistence and constraints create a
+  reviewable safety model for later authenticated product behavior.

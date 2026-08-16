@@ -175,3 +175,119 @@ updated. Milestone 2 closed following successful developer manual QA.
 - **Hash:** `5a4720e1543e69623a624acd4a525a31571a919b`
 - **Message:** `milestone 2: build cybersecurity SaaS dashboard`
 - **Status:** Pushed to `main`.
+
+## Milestone 3 — Supabase Database Foundation
+
+**Date:** 2026-08-16
+
+### Objective
+
+Create a reproducible, tenant-oriented Supabase/PostgreSQL persistence
+foundation with secure defaults and a small backend-only create/read service.
+
+### Scope
+
+Repository-local Supabase CLI configuration; one versioned schema migration;
+deterministic synthetic seed data; 11 relational application tables; UUIDs,
+foreign keys, constraints, indexes, updated-at triggers, RLS and least-privilege
+grants; the official Supabase Python client; lazy backend configuration; scoped
+organization/domain services; record models; unit tests; and an opt-in local
+Data API integration test. Authentication, authorization, verification,
+scanning, AI, delivery, billing, public data routes, and frontend persistence
+were excluded.
+
+### Technical decisions
+
+- Use CLI-generated repository configuration and PostgreSQL 17 with migrations
+  and seeding enabled.
+- Use consistent snake_case `organizations` naming and UUID identifiers.
+- Store `organization_id` on tenant rows and use composite tenant foreign keys
+  to reject cross-organization relationships at the database boundary.
+- Enable RLS on every public application table, revoke application access from
+  `anon`/`authenticated`, define no policies before authentication exists, and
+  grant CRUD only to the backend `service_role`.
+- Prefer `SUPABASE_SECRET_KEY`, with `SUPABASE_SERVICE_ROLE_KEY` as local/legacy
+  fallback, and create the client lazily so `/health` remains independent.
+- Keep Data API access behind organization-scoped service methods rather than
+  adding premature public FastAPI routes.
+- Keep the Milestone 2 browser entirely on its existing typed mock fixtures.
+
+### Files/systems changed
+
+Added `supabase/` CLI configuration, initial migration, and seed; added backend
+database record models, lazy client configuration, organization/domain service,
+unit and integration tests; added the bounded Supabase Python dependency and
+safe environment variable templates; added schema documentation and updated
+current README, architecture, prompt, learning, and milestone records. No
+frontend source or FastAPI route was changed.
+
+### Automated validation performed
+
+- Local `npx supabase start`/status: stack running; API and database endpoints
+  reported.
+- `npx supabase db reset --local`: passed repeatedly; migration and seed rebuilt
+  the local database from zero.
+- `npx supabase migration list --local`: one local migration matched database
+  history (`20260815171352`).
+- PostgreSQL inspection: 11/11 expected application tables present, RLS enabled
+  on 11/11, zero application policies, and CRUD table grants restricted to
+  `service_role`.
+- Seed inspection: 2 organizations, 2 domains, 3 assets, 1 finding, and 1
+  evidence record with tenant-separated relationships.
+- Automated database-invariant regression: a cross-tenant scan/domain reference
+  was rejected by the composite foreign key.
+- Live backend Data API integration tests: passed, 2 tests; organization create/
+  read, cross-tenant domain exclusion, and database-level tenant consistency
+  were verified. Temporary test organizations were removed afterward.
+- Backend deterministic test suite: passed, 9 tests with 2 integration tests
+  skipped unless explicitly enabled.
+- Ruff lint and format checks: passed.
+- Frontend ESLint, TypeScript, and production build regressions: passed.
+
+### Manual QA
+
+**PASSED — developer verified:**
+
+- Local Supabase started successfully, and Supabase Studio was accessible.
+- All 11 expected public application tables were visible: `profiles`,
+  `organizations`, `organization_members`, `domains`, `scans`, `assets`,
+  `findings`, `evidence`, `remediations`, `integrations`, and `notifications`.
+- Seeded tenant/domain data was present, and `npx supabase db reset --local`
+  successfully recreated the seeded state.
+- FastAPI `GET /health` continued to return
+  `{"status":"ok","service":"shadow-it-tracker-api"}` without database
+  configuration.
+- Tenant-scoped service queries excluded another organization's domains.
+- The automated invariant test proved that PostgreSQL rejects an Organization A
+  scan referencing Organization B's domain with error `23503` from
+  `scans_domain_tenant_fk`.
+- Opt-in Supabase integration tests passed: 2 passed. The normal backend suite
+  passed: 9 passed, 2 integration tests skipped.
+- Ruff lint and format checks, frontend lint and TypeScript validation, the
+  frontend production build, and `git diff --check` all passed.
+- Git status contained no real environment files, JWT-like secrets, elevated
+  frontend Supabase keys, or other credential material.
+- The Milestone 2 frontend remained synthetic/mock-data driven. No
+  authentication, domain verification, scanners, AI, alerts, billing,
+  scheduling, or production deployment was implemented.
+
+### Problems/fixes
+
+The Supabase CLI was not installed globally, so the supported current CLI was
+invoked through `npx`. First startup required downloading the local Docker
+images; subsequent migration, seed, and reset operations completed normally.
+The official Python client emitted upstream deprecation warnings for its
+internal PostgREST timeout/verification arguments during integration testing;
+the requests still passed and no deprecated application API is used. The
+restricted test environment also prevented pytest from writing its optional
+cache, without affecting test execution.
+
+### Documentation status
+
+Milestone 3 README, architecture, database schema, prompt, learning, and
+milestone records updated. Milestone 3 documentation closed following
+successful developer manual QA; the implementation commit remains pending.
+
+### Commit
+
+**PENDING developer review.**

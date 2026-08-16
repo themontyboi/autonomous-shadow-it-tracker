@@ -2,14 +2,16 @@
 
 Autonomous Shadow IT Tracker is a defensive External Attack Surface Management
 (EASM) and exposure-monitoring project. Milestone 2 adds a responsive
-cybersecurity SaaS product shell powered entirely by typed synthetic data while
-preserving the Milestone 1 FastAPI health connection.
+cybersecurity SaaS product shell powered entirely by typed synthetic data.
+Milestone 3 adds a reproducible Supabase/PostgreSQL data foundation and a small
+backend-only data service while preserving the Milestone 1 health connection.
 
-This repository does **not** yet scan domains, store data, authenticate users,
-or use AI. Those capabilities belong to later, separately authorised
+The database can now store synthetic foundational records. This repository does
+**not** yet authenticate users, connect the dashboard to stored data, scan
+domains, or use AI. Those capabilities belong to later, separately authorised
 milestones.
 
-## Current Milestone 2 status
+## Current Milestone 3 status
 
 Implemented:
 
@@ -20,21 +22,28 @@ Implemented:
 - mocked New Scan interaction that performs no network activity
 - compact checking, connected, and unavailable API health states
 - FastAPI backend with a non-sensitive `GET /health` endpoint
+- version-controlled Supabase configuration, PostgreSQL migration, and seed data
+- tenant-oriented relational schema with constraints, indexes, and RLS enabled
+- backend-only Supabase configuration and organization/domain service methods
+- deterministic unit tests and an opt-in local Data API integration test
 - explicit, configurable local CORS origins
 - backend health test plus Ruff lint/format configuration
 - environment templates and project documentation
 
 ## Current architecture and stack
 
-The browser loads the Next.js product shell on port 3000. Product routes render
-centralized mock fixtures; they do not request future security data. A compact
-client component independently calls FastAPI `GET /health` on port 8000.
+The browser loads the Next.js product shell on port 3000. Product routes still
+render centralized mock fixtures and do not query Supabase. A compact client
+component independently calls FastAPI `GET /health` on port 8000. Backend-only
+services can access the Supabase Data API when explicitly invoked; `/health`
+does not require database configuration.
 
 | Component | Technology | Current responsibility |
 | --- | --- | --- |
 | Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4, Lucide React | Present the responsive mock-data product shell and report backend health |
-| Backend | Python 3.12+, FastAPI, Uvicorn | Serve the health endpoint and local CORS policy |
-| Validation | ESLint, TypeScript, pytest, Ruff | Check the Milestone 1 codebase |
+| Backend | Python 3.12+, FastAPI, Uvicorn, Supabase Python client | Serve health and provide internal database services |
+| Database | Supabase CLI, PostgreSQL 17, Data API | Reproduce and expose the local relational foundation to backend services |
+| Validation | ESLint, TypeScript, pytest, Ruff, local Supabase CLI | Check frontend, backend, schema, seed, and service behavior |
 
 See [docs/architecture.md](docs/architecture.md) for the data flow and component
 boundaries.
@@ -51,8 +60,14 @@ autonomous-shadow-it-tracker/
 |-- backend/
 |   |-- app/api/health.py   # GET /health route
 |   |-- app/main.py         # FastAPI app and CORS configuration
+|   |-- app/models/         # Validated organization/domain records
+|   |-- app/services/       # Lazy Supabase client and scoped data service
 |   |-- tests/              # Backend automated tests
 |   `-- pyproject.toml      # Python dependencies and tooling
+|-- supabase/
+|   |-- config.toml         # Repository-local Supabase CLI configuration
+|   |-- migrations/         # Versioned PostgreSQL schema changes
+|   `-- seed.sql            # Deterministic synthetic development data
 |-- docs/                   # Architecture, milestone, prompt, learning logs
 |-- .env.example            # Environment variable reference
 `-- README.md
@@ -63,6 +78,31 @@ autonomous-shadow-it-tracker/
 - Node.js 20.9 or newer (Node.js 24 was used for initial validation)
 - npm
 - Python 3.12 or newer (Python 3.13 was used for initial validation)
+- Docker Desktop or another Docker-compatible runtime
+- Supabase CLI 2.x, invoked directly or through `npx supabase`
+
+## Local Supabase setup
+
+From the repository root:
+
+```powershell
+npx supabase start
+npx supabase status
+npx supabase db reset --local
+```
+
+`db reset --local` reconstructs the database from the files in
+`supabase/migrations/` and then applies `supabase/seed.sql`. Do not use a linked
+reset for this local workflow. Supabase Studio is available at the URL printed
+by `supabase status`.
+
+Copy the local API URL and service-role key reported by the CLI into backend
+process environment variables when exercising the data service. Hosted
+environments should prefer `SUPABASE_SECRET_KEY`; local CLI compatibility can
+use `SUPABASE_SERVICE_ROLE_KEY`. These are elevated backend-only values: never
+place them in `NEXT_PUBLIC_*`, frontend source, or committed environment files.
+See [docs/database-schema.md](docs/database-schema.md) for schema and security
+details.
 
 ## Backend setup and start
 
@@ -92,6 +132,8 @@ $env:CORS_ALLOWED_ORIGINS = "http://localhost:3000,http://127.0.0.1:3000"
 Use exact origins. Wildcards and malformed origins are rejected. The backend
 template is `backend/.env.example`; it documents values but is not automatically
 loaded, so export deployment-specific values through the process environment.
+The Supabase client is created lazily, so these database values are not required
+to start FastAPI or call `GET /health`.
 
 Test the running endpoint:
 
@@ -138,6 +180,11 @@ python -m ruff check .
 python -m ruff format --check .
 ```
 
+The Supabase integration test is skipped during the normal deterministic test
+run. To exercise it against the local stack, set `RUN_SUPABASE_INTEGRATION=1`,
+`SUPABASE_URL`, and one backend-only elevated key before running
+`python -m pytest -m integration`.
+
 Frontend:
 
 ```powershell
@@ -157,9 +204,9 @@ evidence, while AI may later interpret that evidence—it will not replace
 deterministic detection. Complete secrets must never be exposed in interfaces or
 logs, and any future generated remediation remains subject to human review.
 
-Milestone 2 intentionally contains no Supabase/PostgreSQL integration,
-authentication, organisations, domain registration or verification, scanner or
-worker logic, real asset discovery, vulnerability detection or finding
-persistence, AI/LLM integration, alerts, billing integration, or real scan
-functionality. All security and usage information shown in the frontend is
-synthetic demo data.
+Milestone 3 introduces persistence shapes only. It contains no sign-up/sign-in,
+sessions, user authorization, domain ownership verification, scanner or worker
+logic, real asset discovery, vulnerability detection, AI/LLM calls,
+remediation generation, notification delivery, billing enforcement, or
+production deployment. All security and usage information shown in the
+frontend remains synthetic demo data.

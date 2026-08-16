@@ -76,3 +76,48 @@ milestone systems.
 explicit `minmax(0, …)` tracks so mobile content can use the viewport width
 without document-level horizontal overflow. Developer mobile re-verification
 passed.
+
+## Milestone 3 — Supabase Database Foundation
+
+**Objective:** Establish reproducible Supabase/PostgreSQL persistence with a
+tenant-oriented relational schema, secure RLS posture, and a small backend-only
+create/read path while preserving all prior behavior.
+
+**Included:** CLI-generated local Supabase configuration, versioned migration,
+deterministic synthetic seed, 11 public application tables, UUID/relationship/
+constraint/index design, updated-at triggers, tenant-consistency constraints,
+RLS and least-privilege grants, safe backend environment templates, the
+official Supabase Python client, lazy client creation, organization/domain
+models and explicitly scoped service methods, unit and opt-in integration tests,
+local database reconstruction/inspection, regressions, security audit, and
+Milestone 3 documentation.
+
+**Explicitly excluded:** Sign-up/sign-in/sign-out, sessions, browser auth, user
+authorization, complete `auth.uid()` RLS policies, domain verification, scan
+APIs or execution, workers/queues, reconnaissance, asset discovery,
+vulnerability detection, secret searching, AI/LLM/LangGraph, remediation
+generation, external messaging/integration behavior, scheduling, billing,
+production deployment, public database routes, `supabase-js`, and replacement
+of frontend mock data.
+
+**Outcome:** The local schema and safe seed rebuilt successfully, backend unit
+and live Data API service validation passed, RLS remained deny-by-default for
+browser roles, and frontend/backend regressions passed. Developer manual QA and
+the implementation commit remain pending; Milestone 4 was not started.
+
+## Milestone 3 — Documentation Closure
+
+**Objective:** Accurately close Milestone 3 documentation after successful
+developer manual and security QA.
+
+**Included:** Record the verified local Supabase/Studio/schema/seed behavior,
+database-independent health endpoint, tenant-scoped service and database
+constraint results, integration and regression results, Git secret hygiene,
+unchanged mock-data frontend, excluded future systems, and passed QA status.
+
+**Explicitly excluded:** Application code, tests, migrations, seed logic,
+dependencies, configuration, frontend UI, backend services, database
+architecture, commits, pushes, and Milestone 4 work.
+
+**Outcome:** Milestone 3 manual QA and documentation were recorded as complete.
+The implementation commit remains pending; no hash was invented.
